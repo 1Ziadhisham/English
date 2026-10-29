@@ -1,0 +1,283 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>رحلة باند 7</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@500;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: a boarding pass for a 12-week flight. Ticket header, week strip as flight legs, today's mission as a stamped card. */
+:root{
+  --paper:#f3f5f1; --card:#ffffff; --ink:#18261f; --muted:#5b6b62; --line:#d9e0da;
+  --pass:#1e4a3c; --pass-ink:#eef5f0; --stamp:#2f5fb3; --gold:#b9852a; --done:#2e7d4f; --soft:#e7eee9;
+  --display:"Reem Kufi","IBM Plex Sans Arabic",system-ui,sans-serif;
+  --body:"IBM Plex Sans Arabic",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#101713; --card:#18221d; --ink:#e6eee8; --muted:#9aaca1; --line:#2a3832;
+  --pass:#1a3b30; --pass-ink:#e6f1ea; --stamp:#7ea4ea; --gold:#d8a64e; --done:#5cc286; --soft:#1f2c26; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#101713; --card:#18221d; --ink:#e6eee8; --muted:#9aaca1; --line:#2a3832;
+  --pass:#1a3b30; --pass-ink:#e6f1ea; --stamp:#7ea4ea; --gold:#d8a64e; --done:#5cc286; --soft:#1f2c26; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15.5px;line-height:1.75;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
+.wrap{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.35}
+a{color:var(--stamp)}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate}
+/* boarding pass */
+.pass{background:var(--pass);color:var(--pass-ink);border-radius:18px;overflow:hidden;position:relative}
+.pass-top{padding:20px 22px 16px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-end}
+.route{display:flex;align-items:center;gap:14px;font-family:var(--display)}
+.route b{font-size:2.3rem;letter-spacing:.02em}
+.route .plane{opacity:.7;font-size:1.2rem}
+.pass-top small{display:block;opacity:.75;font-size:.78rem;letter-spacing:.06em}
+.perf{border-top:2px dashed color-mix(in srgb,var(--pass-ink) 35%,transparent);margin:0 14px}
+.pass-bot{padding:14px 22px 18px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.pass-bot div small{display:block;opacity:.7;font-size:.72rem}
+.pass-bot div b{font-family:var(--mono);font-size:1.05rem}
+.bar{height:6px;background:color-mix(in srgb,var(--pass-ink) 18%,transparent)}
+.bar i{display:block;height:100%;background:var(--gold);width:0;transition:width .4s}
+@media (max-width:480px){.pass-bot{grid-template-columns:repeat(2,1fr)}.route b{font-size:1.8rem}}
+/* honest note */
+.note{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.note h3{font-size:1.05rem;margin-bottom:6px}
+.note p{margin:0;color:var(--muted)}
+/* week strip */
+.legs{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin}
+.leg{flex:0 0 auto;min-width:58px;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:6px 8px;text-align:center;cursor:pointer;font:inherit;color:inherit}
+.leg small{display:block;font-size:.68rem;color:var(--muted)}
+.leg b{font-family:var(--mono)}
+.leg[aria-pressed="true"]{background:var(--pass);color:var(--pass-ink);border-color:var(--pass)}
+.leg[aria-pressed="true"] small{color:inherit;opacity:.8}
+.leg.full{border-color:var(--done)}
+.leg:focus-visible,.day:focus-visible,button:focus-visible{outline:2px solid var(--stamp);outline-offset:2px}
+/* week card */
+.week{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 18px;display:flex;flex-direction:column;gap:14px}
+.week-head{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline}
+.week-head h2{font-size:1.45rem}
+.chip{font-size:.78rem;background:var(--soft);border-radius:999px;padding:2px 10px;color:var(--muted)}
+.goal{margin:0;color:var(--muted)}
+.days{display:flex;gap:6px;flex-wrap:wrap}
+.day{border:1px solid var(--line);background:transparent;border-radius:999px;padding:4px 12px;font:inherit;font-size:.85rem;cursor:pointer;color:inherit}
+.day[aria-pressed="true"]{border-color:var(--stamp);color:var(--stamp);font-weight:600}
+.day.boss{border-style:dashed;border-color:var(--gold)}
+.day.ok::after{content:" ✓";color:var(--done)}
+/* mission */
+.mission{display:flex;flex-direction:column;gap:10px}
+.task{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:start;padding:12px;border-radius:12px;background:var(--soft)}
+.task input{width:20px;height:20px;margin-top:4px;accent-color:var(--done)}
+.task .t{min-width:0}
+.task .t b{display:block;font-size:.98rem}
+.task .t p{margin:2px 0 0;color:var(--muted);font-size:.9rem}
+.task .t a{font-size:.88rem;display:inline-block;margin-top:4px;margin-inline-end:10px}
+.task .min{font-family:var(--mono);font-size:.78rem;color:var(--muted);white-space:nowrap}
+.task.de{background:transparent;border:1px dashed var(--line)}
+.task.checked .t b{text-decoration:line-through;opacity:.6}
+.stamp{align-self:flex-start;border:2px solid var(--stamp);color:var(--stamp);border-radius:8px;padding:2px 10px;font-family:var(--display);transform:rotate(-3deg);font-size:.9rem}
+/* claude examiner */
+.coach{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:10px}
+.coach h2{font-size:1.2rem}
+.coach pre{white-space:pre-wrap;background:var(--soft);border-radius:10px;padding:12px;margin:0;font-family:var(--body);font-size:.88rem;direction:ltr;text-align:left;max-height:220px;overflow:auto}
+.btn{align-self:flex-start;background:var(--pass);color:var(--pass-ink);border:0;border-radius:10px;padding:8px 16px;font:inherit;font-weight:600;cursor:pointer}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+/* methods */
+.methods{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
+.m{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
+.m h3{font-size:1rem;margin-bottom:4px}
+.m p{margin:0;font-size:.88rem;color:var(--muted)}
+.foot{color:var(--muted);font-size:.85rem}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="pass" aria-label="بطاقة الرحلة">
+    <div class="pass-top">
+      <div>
+        <small>BOARDING PASS · IELTS</small>
+        <div class="route"><b class="mono">B1</b><span class="plane">✈</span><b class="mono">7.0</b></div>
+      </div>
+      <div style="text-align:left">
+        <small>RESERVE ROUTE</small>
+        <div class="route" style="gap:8px"><b class="mono" style="font-size:1.3rem">A0 ✈ A1</b></div>
+        <small>Deutsch · 15 min</small>
+      </div>
+    </div>
+    <div class="perf"></div>
+    <div class="pass-bot">
+      <div><small>المسافر</small><b>إنت</b></div>
+      <div><small>المدة</small><b>12 أسبوع</b></div>
+      <div><small>نقاطك XP</small><b id="xp">0</b></div>
+      <div><small>أيام مكتملة</small><b id="daysDone">0/84</b></div>
+    </div>
+    <div class="bar"><i id="prog"></i></div>
+  </header>
+
+  <section class="note">
+    <h3>قبل ما تبدأ: الاتفاق بيننا</h3>
+    <p>ساعة إنجليزي يوميًا لمدة 12 أسبوع تساوي حوالي 84 ساعة. ده كافي يرفعك نص باند لباند لو بدأت من 6 تقريبًا، وصعب لو بدأت من 5. عشان كده أول يوم فيه اختبار تحديد مستوى، وكل يوم سابع امتحان Speaking كامل، والأرقام دي هي اللي هتقولك إنت ماشي صح ولا محتاج تزوّد الوقت. الألماني بربع ساعة يوميًا هيوصلك تقريبًا لنص مستوى A1 في الفترة دي، وده طبيعي: معهد جوته بيقدّر A1 بين 60 و150 ساعة، وB2 بين 450 و600 ساعة.</p>
+  </section>
+
+  <nav class="legs" id="legs" aria-label="أسابيع الرحلة"></nav>
+
+  <section class="week" id="week" aria-live="polite"></section>
+
+  <section class="coach">
+    <h2>الممتحن الشخصي: كلود</h2>
+    <p class="foot" style="margin:0">انسخ البرومت ده وافتحه في محادثة جديدة مع كلود (وشغّل الصوت لو متاح). ده أقوى تمرين في الخطة كلها، لأنه بيحوّل الكلمات اللي إنت عارفها لكلام بتطلّعه فعلًا.</p>
+    <div class="tabs" id="ptabs"></div>
+    <pre id="prompt"></pre>
+    <button class="btn" id="copy">انسخ البرومت</button>
+  </section>
+
+  <section>
+    <h2 style="font-size:1.2rem;margin-bottom:10px">ليه الخطة مبنية كده</h2>
+    <div class="methods">
+      <div class="m"><h3>4/3/2</h3><p>بتحكي نفس الحكاية 3 مرات في وقت أقل كل مرة. أبحاث بول نيشن لقت إن سرعة الكلام بتزيد والتردد بيقل، وحتى الأخطاء بتقل في المرة التالتة.</p></div>
+      <div class="m"><h3>Shadowing</h3><p>تسمع جملة وتكررها فورًا بنفس النغمة. دراسات على متعلمين لغة أجنبية لقت تحسن في الطلاقة والنطق، خاصة مع التكرار المنتظم.</p></div>
+      <div class="m"><h3>معايير الباند الأربعة</h3><p>الطلاقة، المفردات، القواعد، والنطق. كل واحد 25% من درجة الـ Speaking، فكل مهمة مربوطة بواحد منهم على الأقل.</p></div>
+      <div class="m"><h3>بسيط وصح أحسن</h3><p>كلمة عادية مستخدمة صح أحسن من كلمة نادرة غلط. المطلوب لباند 7 هو المرونة، مش استعراض.</p></div>
+    </div>
+  </section>
+
+  <p class="foot">الروابط نوعين: مصادر رسمية ثابتة (BBC، DW، IELTS by IDP)، وروابط بحث موجّهة على يوتيوب بأسماء قنوات معروفة، لأن الفيديوهات الفردية بتتشال وتتغير لكن البحث بيجيبلك دايمًا الأحدث. ملف القواعد في صفحة منفصلة.</p>
+</div>
+
+<script>
+const yt = q => "https://www.youtube.com/results?search_query=" + encodeURIComponent(q);
+const SRC = {
+  bbc6:["6 Minute English · BBC","https://www.youtube.com/@bbclearningenglish/search?query=6%20Minute%20English"],
+  bbcweb:["BBC Learning English (نص + أسئلة)","https://www.bbc.co.uk/learningenglish"],
+  idp:["عينات Speaking رسمية · IELTS by IDP",yt("IELTS by IDP Speaking test sample band 7")],
+  nico:["Nicos Weg A1 · DW","https://learngerman.dw.com/en/nicos-weg/c-36519789"],
+  nicoyt:["Nicos Weg على يوتيوب",yt("Nicos Weg A1 DW Learn German")],
+  easyde:["Super Easy German",yt("Super Easy German beginner")],
+};
+const weeks = [
+ {t:"الإقلاع: تحديد المستوى",topic:"نفسك وشغلك",goal:"تعرف مستواك الحقيقي وتتعود على شكل الامتحان. ابدأ دفتر أخطاء.",
+  vid:["Speaking Part 1 كامل مع شرح",yt("IELTS Speaking Part 1 tips IELTS Liz")],skill:"Writing: اقرأ سؤال Task 2 واكتب خطة 5 دقايق بس",
+  de:"Nicos Weg: الحلقات 1–3 (Hallo، التعارف). احفظ 5 كلمات."},
+ {t:"طلاقة Part 1",topic:"المدينة والبيت",goal:"تجاوب بـ 2–3 جمل طبيعية من غير ما تقف. الهدف: صفر سكوت أطول من 3 ثواني.",
+  vid:["إجابات Part 1 الطبيعية",yt("IELTS Speaking Part 1 natural answers E2 IELTS")],skill:"Reading: نص قصير من BBC News وطلّع منه 5 تعبيرات",
+  de:"Nicos Weg 4–6. الأرقام والسؤال عن الحال."},
+ {t:"Part 2: الدقيقتين",topic:"شخص أثّر فيك",goal:"تتكلم دقيقتين كاملين على أي cue card بخطة دقيقة واحدة.",
+  vid:["تكنيك Part 2",yt("IELTS Speaking Part 2 how to speak for 2 minutes")],skill:"Writing: فقرة Task 2 واحدة (رأي + سبب + مثال)",
+  de:"Nicos Weg 7–9. الأسرة والمهن."},
+ {t:"Part 3: الرأي والتحليل",topic:"التكنولوجيا",goal:"تجاوب أسئلة مجردة: رأي، سبب، مثال، مقارنة. ده بيفرق 6 عن 7.",
+  vid:["إجابات Part 3 بباند عالي",yt("IELTS Speaking Part 3 band 7 answers explained")],skill:"Writing: مقال Task 2 كامل في 40 دقيقة (مرة في الأسبوع)",
+  de:"Nicos Weg 10–12. الأكل والشرب."},
+ {t:"Writing Task 2",topic:"التعليم",goal:"هيكل ثابت لأنواع المقال الأربعة: رأي، مناقشة، مشكلة وحل، مزايا وعيوب.",
+  vid:["أنواع مقالات Task 2",yt("IELTS Writing Task 2 essay types IELTS Advantage")],skill:"Writing: مقدمة + فقرة يوميًا، وكلود يصحح بمعايير الباند",
+  de:"Nicos Weg 13–15. الوقت والمواعيد."},
+ {t:"Writing Task 1",topic:"الشغل والفلوس",goal:"وصف رسوم بيانية وجداول (Academic) أو خطابات (General) بدقة ومقارنات.",
+  vid:["Task 1 خطوة بخطوة",yt("IELTS Writing Task 1 academic overview paragraph")],skill:"Writing: Task 1 كامل في 20 دقيقة",
+  de:"Nicos Weg 16–18. التسوق."},
+ {t:"Listening: الأقسام الصعبة",topic:"البيئة",goal:"Section 3 و4: محاضرات ونقاشات أكاديمية. التدريب على توقّع الإجابة قبل ما تسمعها.",
+  vid:["استراتيجيات Listening",yt("IELTS Listening tips section 3 4")],skill:"Listening: اختبار كامل من كتب كامبريدج",
+  de:"Nicos Weg 19–21. الاتجاهات والمدينة."},
+ {t:"Reading: السرعة والدقة",topic:"الصحة",goal:"True/False/Not Given ومطابقة العناوين في وقت محدود.",
+  vid:["True False Not Given",yt("IELTS Reading True False Not Given strategy")],skill:"Reading: Passage كامل في 20 دقيقة",
+  de:"Nicos Weg 22–24. الجسم والدكتور."},
+ {t:"ترقية المفردات",topic:"الإعلام والسوشيال",goal:"تحويل الكلمات اللي تعرفها لـ collocations طبيعية تستخدمها فعلًا.",
+  vid:["Collocations لـ IELTS",yt("IELTS speaking collocations band 7 vocabulary")],skill:"Writing: أعد كتابة مقال قديم بمفردات أدق",
+  de:"Nicos Weg 25–27. السكن."},
+ {t:"النطق والإيقاع",topic:"السفر والثقافة",goal:"Connected speech، الضغط على الكلمات، والنغمة. واضح أهم من لهجة معينة.",
+  vid:["الكلام المتصل",yt("connected speech English pronunciation Rachel's English")],skill:"Speaking: سجّل نفسك واسمع 3 مرات",
+  de:"Nicos Weg 28–30. الإجازة."},
+ {t:"امتحانات كاملة",topic:"المستقبل والمجتمع",goal:"محاكاة كاملة بالتوقيت، وتحليل الأخطاء المتكررة من دفترك.",
+  vid:["امتحان Speaking كامل بباند 7",yt("IELTS Speaking full test band 7 examiner feedback")],skill:"Full mock: Listening + Reading + Writing",
+  de:"Nicos Weg 31–33. مراجعة."},
+ {t:"الهبوط: التهدئة",topic:"مواضيع حرة",goal:"تخفيف الحِمل، مراجعة دفتر الأخطاء، ونوم كويس قبل الامتحان.",
+  vid:["يوم الامتحان",yt("IELTS Prepare by IDP test day")],skill:"مراجعة: أقوى 10 تعبيرات و5 أخطاء متكررة",
+  de:"راجع كل الكلمات اللي جمعتها. اتفرّج على حلقة Nicos Weg بدون ترجمة."},
+];
+const DAYS=["سبت","حد","اتنين","تلات","أربع","خميس","جمعة"];
+function tasks(w,d){
+  const W=weeks[w];
+  if(d===6) return [
+    {k:"boss",b:"🎯 امتحان الأسبوع: Speaking كامل مع كلود",p:"Part 1 + 2 + 3 بالتوقيت الحقيقي (11–14 دقيقة). خلي كلود يديك باند لكل معيار من الأربعة، وسجّل الرقم.",min:"20",l:[["برومت الممتحن ↓","#coach"]]},
+    {k:"cmp",b:"قارن نفسك بعينة رسمية",p:"اتفرج على عينة باند 7 رسمية ولاحظ: إيه اللي بيعمله وإنت لأ؟",min:"15",l:[SRC.idp]},
+    {k:"err",b:"دفتر الأخطاء",p:"اكتب أكتر 3 أخطاء اتكررت الأسبوع ده، والصح بتاعها.",min:"10"},
+    {k:"rest",b:"استماع للمتعة",p:"حاجة بالإنجليزي في موضوع بتحبه (كورة، تكنولوجيا، أفلام) من غير ما تذاكر.",min:"15"},
+    {k:"de",b:"الألماني: مراجعة الأسبوع",p:"اكتب الكلمات اللي اتعلمتها وقولها بصوت عالي.",min:"15",de:1}];
+  const rot=[
+    ["Speaking Part 1",`5 أسئلة عن "${W.topic}". كل إجابة 20–30 ثانية.`],
+    ["Speaking Part 2 بطريقة 4/3/2",`cue card عن "${W.topic}": قولها في 4 دقايق، بعدين 3، بعدين 2. سجّل التالتة.`],
+    ["Speaking Part 3",`3 أسئلة رأي عن "${W.topic}": رأي، سبب، مثال، ورأي تاني.`],
+    ["Speaking Part 2 بطريقة 4/3/2","cue card جديدة. ركّز إنك متسكتش ومتعيدش نفس الكلمة."],
+    ["محادثة حرة مع كلود",`10 دقايق كلام عن "${W.topic}"، وكلود يصحح بعد كل 3 جمل.`],
+    ["Speaking Part 1 + 3","مزيج سريع. الهدف: إجابات أطول بتعبيرات ربط طبيعية."],
+  ][d];
+  return [
+    {k:"in",b:"🎧 استماع مركّز",p:"حلقة 6 Minute English: اسمعها مرة من غير نص، ومرة بالنص، وطلّع 3 تعبيرات.",min:"10",l:[SRC.bbc6,SRC.bbcweb]},
+    {k:"sh",b:"🔁 Shadowing",p:"اختار دقيقة واحدة من الحلقة وكررها جملة جملة بنفس النغمة والسرعة، 3 مرات.",min:"10"},
+    {k:"sp",b:"🎙 "+rot[0],p:rot[1]+" ابعت التسجيل أو اكتب كلامك لكلود بالظبط زي ما قلته.",min:"20",l:[W.vid,["برومت الممتحن ↓","#coach"]]},
+    {k:"sk",b:"✍️ "+(d%2?"مهارة الأسبوع":"Reading/Writing"),p:W.skill,min:"20"},
+    {k:"de",b:"🇩🇪 الألماني",p:W.de,min:"15",l:[SRC.nico,SRC.nicoyt],de:1}];
+}
+let S={}; try{S=JSON.parse(localStorage.getItem("ielts7")||"{}")}catch(e){}
+const save=()=>{try{localStorage.setItem("ielts7",JSON.stringify(S))}catch(e){}};
+let cw=S.cw??0, cd=S.cd??0;
+const key=(w,d,k)=>`${w}-${d}-${k}`;
+const dayDone=(w,d)=>tasks(w,d).every(t=>S[key(w,d,t.k)]);
+function stats(){
+  let xp=0,dd=0;
+  for(let w=0;w<12;w++)for(let d=0;d<7;d++){const ts=tasks(w,d);ts.forEach(t=>{if(S[key(w,d,t.k)])xp+=t.k==="boss"?50:10});if(ts.every(t=>S[key(w,d,t.k)]))dd++;}
+  document.getElementById("xp").textContent=xp;
+  document.getElementById("daysDone").textContent=dd+"/84";
+  document.getElementById("prog").style.width=(dd/84*100)+"%";
+}
+function renderLegs(){
+  const el=document.getElementById("legs");el.innerHTML="";
+  weeks.forEach((W,i)=>{const b=document.createElement("button");b.className="leg";
+    let full=true;for(let d=0;d<7;d++)if(!dayDone(i,d))full=false;if(full)b.classList.add("full");
+    b.setAttribute("aria-pressed",i===cw);b.innerHTML=`<small>أسبوع</small><b>${i+1}</b>`;
+    b.onclick=()=>{cw=i;cd=0;S.cw=cw;S.cd=cd;save();render()};el.appendChild(b)});
+}
+function renderWeek(){
+  const W=weeks[cw],el=document.getElementById("week");
+  let h=`<div class="week-head"><h2>${W.t}</h2><span class="chip">موضوع الأسبوع: ${W.topic}</span></div><p class="goal">${W.goal}</p><div class="days">`;
+  DAYS.forEach((n,i)=>h+=`<button class="day${i===6?" boss":""}${dayDone(cw,i)?" ok":""}" aria-pressed="${i===cd}" data-d="${i}">${i===6?"امتحان · ":""}${n}</button>`);
+  h+=`</div><div class="mission">`;
+  tasks(cw,cd).forEach(t=>{const id=key(cw,cd,t.k),c=!!S[id];
+    h+=`<label class="task${t.de?" de":""}${c?" checked":""}"><input type="checkbox" id="c-${id}" data-id="${id}" ${c?"checked":""}><span class="t"><b>${t.b}</b><p>${t.p}</p>${(t.l||[]).map(l=>`<a href="${l[1]}"${l[1][0]==="#"?"":' target="_blank" rel="noopener"'}>${l[0]}</a>`).join("")}</span><span class="min">${t.min} د</span></label>`});
+  if(dayDone(cw,cd))h+=`<span class="stamp">تم الختم ✓</span>`;
+  el.innerHTML=h+"</div>";
+  el.querySelectorAll(".day").forEach(b=>b.onclick=()=>{cd=+b.dataset.d;S.cd=cd;save();render()});
+  el.querySelectorAll("input[type=checkbox]").forEach(c=>c.onchange=()=>{S[c.dataset.id]=c.checked;save();render()});
+}
+const P={
+ "امتحان كامل":`You are a certified IELTS Speaking examiner. Run a full IELTS Speaking test with me (Part 1: 4-5 questions, Part 2: one cue card with 1 minute prep and 2 minutes talk, Part 3: 4-5 discussion questions). Ask ONE question at a time and wait for my answer. Do not correct me during the test.
+After Part 3, give me:
+1. A band score (0-9) for each criterion: Fluency & Coherence, Lexical Resource, Grammatical Range & Accuracy, Pronunciation (if you can hear me) — with a one-line reason for each, based on the official public band descriptors.
+2. My 3 most important mistakes, with the corrected version.
+3. 5 natural collocations I could have used, taken from my own answers.
+4. One thing to focus on next week.
+Be honest, not encouraging. My target is band 7.`,
+ "تمرين يومي":`Be my IELTS speaking partner for 15 minutes. Today's topic: [اكتب الموضوع].
+Rules:
+- Ask me one question at a time, Part 1 or Part 3 style.
+- After every 3 answers, stop and show: what I said → a more natural band-7 version. Keep my ideas, just upgrade the language.
+- Point out any word I repeated more than twice and give me 2 alternatives.
+- Keep your own turns short so I talk at least 80% of the time.`,
+ "تصحيح مقال":`Act as an IELTS Writing examiner. Here is my Task 2 essay and the question:
+[الصق السؤال والمقال]
+Give a band for each criterion (Task Response, Coherence & Cohesion, Lexical Resource, Grammatical Range & Accuracy) with a short reason. Then show my 5 weakest sentences rewritten at band 7-8, and tell me the single biggest change that would raise my score. Don't rewrite the whole essay.`,
+ "Deutsch":`Du bist mein geduldiger Deutschlehrer. My level is A0/A1 and I study 15 minutes a day with "Nicos Weg". Today's topic: [الموضوع].
+Ask me 5 very simple questions in German, one at a time. If I make a mistake, show the correct sentence and explain in one short line in English. At the end, give me 5 new words with an example sentence each.`};
+let pk="امتحان كامل";
+function renderPrompt(){
+  const t=document.getElementById("ptabs");t.innerHTML="";
+  Object.keys(P).forEach(k=>{const b=document.createElement("button");b.className="day";b.textContent=k;b.setAttribute("aria-pressed",k===pk);b.onclick=()=>{pk=k;renderPrompt()};t.appendChild(b)});
+  document.getElementById("prompt").textContent=P[pk];
+}
+document.querySelector(".coach").id="coach";
+document.getElementById("copy").onclick=async e=>{const btn=e.currentTarget;
+  try{await navigator.clipboard.writeText(P[pk]);btn.textContent="اتنسخ ✓"}
+  catch(_){const r=document.createRange();r.selectNodeContents(document.getElementById("prompt"));const s=getSelection();s.removeAllRanges();s.addRange(r);btn.textContent="اتحدد، انسخه يدوي"}
+  setTimeout(()=>btn.textContent="انسخ البرومت",1800)};
+function render(){renderLegs();renderWeek();stats()}
+render();renderPrompt();
+</script>
+
+</body></html>
